@@ -2,6 +2,7 @@ import warnings
 from abc import ABC, abstractmethod
 from inspect import signature
 from typing import Any, Callable, Type, get_args, get_origin
+from typing import Callable, Any
 
 from pydantic import (
     BaseModel,
@@ -282,3 +283,10 @@ def tool(*args):
     if len(args) == 1 and isinstance(args[0], str):
         return _make_with_name(args[0])
     raise ValueError("Invalid arguments")
+
+def tool(func: Callable) ->  BaseTool:
+    """
+    Decorator to create a Tool object from a function.
+    """
+    description = func.__doc__
+    return  BaseTool(name=func.__name__, description=description, func=func)
